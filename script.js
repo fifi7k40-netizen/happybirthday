@@ -1,17 +1,54 @@
-/* ==========================================
-   DIHLABE'S BIRTHDAY ADVENTURE ❤️
-   SCRIPT.JS - PART 1
-========================================== */
+/* ===========================
+FOR DIHLABE ❤️
+SCRIPT.JS
+PART 1
+=========================== */
 
-/* ---------- PAGES ---------- */
+const music = document.getElementById("music");
+const beginBtn = document.getElementById("beginBtn");
+const opening = document.getElementById("opening");
+const website = document.getElementById("website");
+const continueBtn = document.getElementById("continue");
+const letter = document.getElementById("letterText");
+const envelope = document.querySelector(".envelope");
 
-const pages = document.querySelectorAll(".page");
+/* Hide website until Begin */
 
-function goToPage(pageNumber){
+website.style.display = "none";
 
-pages.forEach(page=>page.classList.remove("active"));
+/* ===========================
+BEGIN WEBSITE
+=========================== */
 
-document.getElementById("page"+pageNumber).classList.add("active");
+beginBtn.addEventListener("click",()=>{
+
+music.volume=0;
+
+music.play();
+
+let volume=0;
+
+const fade=setInterval(()=>{
+
+volume+=0.02;
+
+music.volume=volume;
+
+if(volume>=1){
+
+clearInterval(fade);
+
+}
+
+},120);
+
+opening.style.opacity="0";
+
+setTimeout(()=>{
+
+opening.style.display="none";
+
+website.style.display="block";
 
 window.scrollTo({
 
@@ -21,23 +58,73 @@ behavior:"smooth"
 
 });
 
-}
-
-/* ---------- START BUTTON ---------- */
-
-document
-
-.getElementById("startButton")
-
-.addEventListener("click",()=>{
-
-goToPage(2);
+},1000);
 
 });
 
-/* ---------- FLOATING HEARTS ---------- */
+/* ===========================
+CONTINUE BUTTON
+=========================== */
 
-const hearts=document.getElementById("hearts");
+continueBtn.addEventListener("click",()=>{
+
+document.querySelector(".spotify").scrollIntoView({
+
+behavior:"smooth"
+
+});
+
+});
+
+/* ===========================
+LETTER
+=========================== */
+
+envelope.addEventListener("click",()=>{
+
+letter.style.display="block";
+
+letter.classList.add("fade");
+
+});
+
+/* ===========================
+PHOTO LIGHTBOX
+=========================== */
+
+const lightbox=document.createElement("div");
+
+lightbox.id="lightbox";
+
+const lightImg=document.createElement("img");
+
+lightbox.appendChild(lightImg);
+
+document.body.appendChild(lightbox);
+
+const photos=document.querySelectorAll(".photos img");
+
+photos.forEach(photo=>{
+
+photo.addEventListener("click",()=>{
+
+lightbox.style.display="flex";
+
+lightImg.src=photo.src;
+
+});
+
+});
+
+lightbox.addEventListener("click",()=>{
+
+lightbox.style.display="none";
+
+});
+
+/* ===========================
+FLOATING HEARTS
+=========================== */
 
 function createHeart(){
 
@@ -45,981 +132,17 @@ const heart=document.createElement("div");
 
 heart.className="heart";
 
-heart.innerHTML="❤️";
+heart.innerHTML="❤";
 
 heart.style.left=Math.random()*100+"vw";
 
-heart.style.fontSize=(20+Math.random()*25)+"px";
+heart.style.animationDuration=
 
-heart.style.animationDuration=(5+Math.random()*4)+"s";
+(Math.random()*3+4)+"s";
 
-hearts.appendChild(heart);
+heart.style.fontSize=
 
-setTimeout(()=>{
-
-heart.remove();
-
-},9000);
-
-}
-
-setInterval(createHeart,450);
-
-/* ---------- PASSCODE ---------- */
-
-const passInputs=document.querySelectorAll("#passcode input");
-
-const message=document.getElementById("passwordMessage");
-
-passInputs.forEach((box,index)=>{
-
-box.addEventListener("input",()=>{
-
-if(box.value.length==1 && index<3){
-
-passInputs[index+1].focus();
-
-}
-
-checkPassword();
-
-});
-
-});
-
-function checkPassword(){
-
-let code="";
-
-passInputs.forEach(input=>{
-
-code+=input.value;
-
-});
-
-if(code==="2005"){
-
-message.innerHTML="❤️ Correct!";
-
-message.style.color="#ffffff";
-
-launchMiniConfetti();
-
-setTimeout(()=>{
-
-goToPage(3);
-
-startBirthdayScene();
-
-},1200);
-
-}
-
-else if(code.length===4){
-
-message.innerHTML="🐶 That's not it! Try again.";
-
-message.style.color="#fff5f5";
-
-}
-
-}
-
-/* ---------- TEDDY SCENE ---------- */
-
-const speech=document.getElementById("speechBubble");
-
-const conversation=[
-
-"Happy Birthday, my love! ❤️",
-
-"Thank you.🥹",
-
-"I made a birthday adventure just for you.",
-
-"I hope you smile the whole way through.",
-
-"Ready for the next challenge? 😄"
-
-];
-
-function startBirthdayScene(){
-
-let line=0;
-
-speech.innerHTML=conversation[line];
-
-const talk=setInterval(()=>{
-
-line++;
-
-if(line<conversation.length){
-
-speech.innerHTML=conversation[line];
-
-}else{
-
-clearInterval(talk);
-
-}
-
-},2300);
-
-}
-
-document
-
-.getElementById("continueOne")
-
-.addEventListener("click",()=>{
-
-goToPage(4);
-
-});
-
-/* ---------- SPORTS CARDS ---------- */
-
-const messages={
-
-f1:"🏎️ Every race reminds me that I'll always cheer for you.",
-
-soccer:"⚽ You'll forever be my favourite player.",
-
-pool:"🎱 One day I'll finally beat you... maybe 😂"
-
-};
-
-let openedCards=0;
-
-const clicked=[];
-
-document.querySelectorAll(".card").forEach(card=>{
-
-card.addEventListener("click",()=>{
-
-const type=card.dataset.card;
-
-if(clicked.includes(type)) return;
-
-clicked.push(type);
-
-openedCards++;
-
-document.getElementById("cardMessage").innerHTML=messages[type];
-
-card.style.transform="scale(1.08)";
-
-card.style.background="white";
-
-card.style.color="#ff4f9a";
-
-if(openedCards===3){
-
-setTimeout(()=>{
-
-goToPage(5);
-
-loadQuiz();
-
-},1800);
-
-}
-
-});
-
-});
-
-/* ---------- MINI CONFETTI ---------- */
-
-function launchMiniConfetti(){
-
-for(let i=0;i<50;i++){
-
-const piece=document.createElement("div");
-
-piece.style.position="fixed";
-
-piece.style.left=Math.random()*100+"vw";
-
-piece.style.top="-20px";
-
-piece.style.width="10px";
-
-piece.style.height="10px";
-
-piece.style.borderRadius="50%";
-
-piece.style.background=["#ff4f9a","#ffffff","#ffd166","#ff8ec5"][Math.floor(Math.random()*4)];
-
-piece.style.zIndex="999";
-
-piece.style.transition="4s linear";
-
-document.body.appendChild(piece);
-
-setTimeout(()=>{
-
-piece.style.transform="translateY(110vh) rotate(720deg)";
-
-piece.style.opacity="0";
-
-},20);
-
-setTimeout(()=>{
-
-piece.remove();
-
-},4200);
-
-}
-
-}
-
-/* ==========================================
-   QUIZ
-========================================== */
-
-const quiz = [
-
-{
-question:"Who loves you the most?",
-answers:[
-"Your Mom ❤️",
-"Kefilwe ❤️",
-"Max Verstappen",
-"Snoek Fish"
-],
-correct:1
-},
-
-{
-question:"What do I call you?",
-answers:[
-"Shemane",
-"Old Man 😂",
-"My Love",
-"All of the Above"
-],
-correct:3
-},
-
-{
-question:"What do you always say?",
-answers:[
-"You Rest You Rust",
-"Never Back Down",
-"No Pain No Gain",
-"Go Faster"
-],
-correct:0
-},
-
-{
-question:"What's your favourite food?",
-answers:[
-"Pizza",
-"Snoek Fish",
-"Burger",
-"Pasta"
-],
-correct:1
-},
-
-{
-question:"Who's prettier?",
-answers:[
-"Kefilwe",
-"Kefilwe",
-"Kefilwe",
-"Kefilwe"
-],
-correct:0
-},
-
-{
-question:"How many hours have you been alive? 🤔",
-answers:[
-"About 184 000",
-"About 190 000",
-"About 200 000",
-"About 220 000"
-],
-correct:0
-}
-
-];
-
-let currentQuestion=0;
-let score=0;
-
-function loadQuiz(){
-
-const box=document.getElementById("quizBox");
-
-if(currentQuestion>=quiz.length){
-
-box.innerHTML=
-
-`
-<h1>🎉</h1>
-
-<h2>
-
-You scored ${score}/${quiz.length}
-
-</h2>
-
-<p>
-
-Good job Birthday Boy ❤️
-
-</p>
-
-`;
-
-setTimeout(()=>{
-
-goToPage(6);
-
-startRace();
-
-},2500);
-
-return;
-
-}
-
-const q=quiz[currentQuestion];
-
-box.innerHTML=
-
-`
-
-<div class="question">
-
-${q.question}
-
-</div>
-
-${q.answers.map((answer,index)=>`
-
-<div class="option"
-
-onclick="chooseAnswer(${index})">
-
-${answer}
-
-</div>
-
-`).join("")}
-
-`;
-
-}
-
-window.chooseAnswer=function(choice){
-
-if(choice===quiz[currentQuestion].correct){
-
-score++;
-
-launchMiniConfetti();
-
-}
-
-currentQuestion++;
-
-loadQuiz();
-
-};
-
-/* ==========================================
-FORMULA ONE GAME
-========================================== */
-
-let seconds=15;
-
-let raceFinished=false;
-
-const timer=document.getElementById("timer");
-
-const car=document.getElementById("car");
-
-const drive=document.getElementById("drive");
-
-let distance=0;
-
-function startRace(){
-
-seconds=15;
-
-timer.innerHTML=seconds;
-
-distance=0;
-
-car.style.left="20px";
-
-raceFinished=false;
-
-}
-
-drive.addEventListener("click",()=>{
-
-if(document.getElementById("page6").classList.contains("active")==false) return;
-
-if(raceFinished) return;
-
-distance+=18;
-
-car.style.left=distance+"px";
-
-if(distance>=650){
-
-finishRace();
-
-}
-
-});
-
-const countdown=setInterval(()=>{
-
-if(document.getElementById("page6").classList.contains("active")==false) return;
-
-if(raceFinished) return;
-
-seconds--;
-
-timer.innerHTML=seconds;
-
-if(seconds<=0){
-
-finishRace();
-
-}
-
-},1000);
-
-function finishRace(){
-
-raceFinished=true;
-
-launchMiniConfetti();
-
-document.getElementById("finishLine").innerHTML=
-
-`
-
-🏁
-
-<br>
-
-<h3>
-
-DIHLABE
-
-1ST PLACE
-
-🥇
-
-</h3>
-
-`;
-
-setTimeout(()=>{
-
-goToPage(7);
-
-},2500);
-
-}
-
-/* ==========================================
-GIFTS
-========================================== */
-
-const gifts=document.querySelectorAll(".giftBox");
-
-let giftsOpened=0;
-
-gifts.forEach((gift,index)=>{
-
-gift.addEventListener("click",()=>{
-
-if(gift.classList.contains("opened")) return;
-
-if(giftsOpened>=2){
-
-alert("😂 Nice try! You only get TWO gifts.");
-
-return;
-
-}
-
-gift.classList.add("opened");
-
-gift.style.opacity=".6";
-
-gift.style.transform="scale(.9)";
-
-giftsOpened++;
-
-if(index===0){
-
-showLoveLetter();
-
-}
-
-if(index===1){
-
-showHeartGift();
-
-}
-
-if(index===2){
-
-showFunnyGift();
-
-}
-
-if(giftsOpened===2){
-
-setTimeout(()=>{
-
-goToPage(8);
-
-launchMiniConfetti();
-
-},7000);
-
-}
-
-});
-
-});
-
-function showLoveLetter(){
-
-document.getElementById("giftContent").innerHTML=
-
-`
-
-<h2>💌 Happy Birthday</h2>
-
-<p>
-
-Happy Birthday, Shemane.
-
-Thank you for being my safest place.
-
-Thank you for making me feel beautiful.
-
-Thank you for loving me the way you do.
-
-I hope today brings you as much happiness as you've brought into my life.
-
-Love,
-
-Kefilwe ❤️
-
-</p>
-
-`;
-
-}
-
-function showHeartGift(){
-
-let hearts="";
-
-for(let i=0;i<120;i++){
-
-hearts+="❤️ ";
-
-}
-
-document.getElementById("giftContent").innerHTML=
-
-`
-
-<h1>
-
-HAPPY BIRTHDAY ❤️
-
-</h1>
-
-<p>
-
-From the girl who loves you the most.
-
-</p>
-
-<div style="font-size:25px;line-height:1.8">
-
-${hearts}
-
-</div>
-
-`;
-
-}
-
-function showFunnyGift(){
-
-document.getElementById("giftContent").innerHTML=
-
-`
-
-<h2>
-
-🏆 BONUS GIFT
-
-</h2>
-
-<p>
-
-Official Diagnosis:
-
-You're only six months older than me...
-
-yet somehow your back already needs maintenance.
-
-😂❤️
-
-Happy Birthday, Old Man.
-
-</p>
-
-`;
-
-}
-
-/* ==========================================
-   SCRIPT.JS - PART 3 (FINAL)
-========================================== */
-
-/* ---------- FINAL PAGE ANIMATION ---------- */
-
-const finalPage=document.getElementById("page8");
-
-const finalObserver=new IntersectionObserver(entries=>{
-
-entries.forEach(entry=>{
-
-if(entry.isIntersecting){
-
-showCertificate();
-
-celebration();
-
-}
-
-});
-
-});
-
-finalObserver.observe(finalPage);
-
-/* ---------- BIG CONFETTI ---------- */
-
-function celebration(){
-
-for(let i=0;i<250;i++){
-
-const confetti=document.createElement("div");
-
-confetti.className="confetti";
-
-confetti.style.left=Math.random()*100+"vw";
-
-confetti.style.top="-20px";
-
-confetti.style.width=(8+Math.random()*8)+"px";
-
-confetti.style.height=(8+Math.random()*8)+"px";
-
-confetti.style.background=
-
-["#ff4f9a","#ff9ec9","#ffffff","#ffd166","#ff6b9f"][Math.floor(Math.random()*5)];
-
-confetti.style.position="fixed";
-
-confetti.style.borderRadius="50%";
-
-confetti.style.zIndex="99999";
-
-confetti.style.transition=(3+Math.random()*3)+"s linear";
-
-document.body.appendChild(confetti);
-
-setTimeout(()=>{
-
-confetti.style.transform=
-
-`translateY(110vh) rotate(${Math.random()*1080}deg)`;
-
-confetti.style.opacity="0";
-
-},20);
-
-setTimeout(()=>{
-
-confetti.remove();
-
-},7000);
-
-}
-
-}
-
-/* ---------- CERTIFICATE ---------- */
-
-function showCertificate(){
-
-setTimeout(()=>{
-
-const certificate=document.createElement("div");
-
-certificate.id="certificate";
-
-certificate.style.position="fixed";
-
-certificate.style.top="50%";
-
-certificate.style.left="50%";
-
-certificate.style.transform="translate(-50%,-50%)";
-
-certificate.style.width="90%";
-
-certificate.style.maxWidth="500px";
-
-certificate.style.background="white";
-
-certificate.style.color="#ff4f9a";
-
-certificate.style.padding="35px";
-
-certificate.style.borderRadius="25px";
-
-certificate.style.boxShadow="0 25px 60px rgba(0,0,0,.25)";
-
-certificate.style.textAlign="center";
-
-certificate.style.zIndex="999999";
-
-certificate.innerHTML=
-
-`
-
-<h1>🏆</h1>
-
-<h2>
-
-OFFICIAL CERTIFICATE
-
-</h2>
-
-<p>
-
-This certificate proudly confirms that
-
-</p>
-
-<h2>
-
-DIHLABE
-
-</h2>
-
-<p>
-
-has successfully completed
-
-</p>
-
-<h3>
-
-Kefilwe's Birthday Adventure ❤️
-
-</h3>
-
-<br>
-
-<p>
-
-Rewards Unlocked
-
-</p>
-
-<p>
-
-❤️ Unlimited Hugs
-
-<br>
-
-❤️ Unlimited Kisses
-
-<br>
-
-❤️ Unlimited Cuddles
-
-<br>
-
-❤️ One Very Clingy Girlfriend
-
-</p>
-
-<br>
-
-<p>
-
-Valid Forever.
-
-</p>
-
-<br>
-
-<button id="closeCertificate">
-
-YAY ❤️
-
-</button>
-
-`;
-
-document.body.appendChild(certificate);
-
-document
-
-.getElementById("closeCertificate")
-
-.onclick=function(){
-
-certificate.remove();
-
-};
-
-},2500);
-
-}
-
-/* ---------- DOG SECRET ---------- */
-
-let dogClicks=0;
-
-document.querySelectorAll(".dog").forEach(dog=>{
-
-dog.addEventListener("click",()=>{
-
-dogClicks++;
-
-dog.style.transform="scale(1.25)";
-
-setTimeout(()=>{
-
-dog.style.transform="";
-
-},300);
-
-if(dogClicks===10){
-
-alert(
-
-"🏆 Secret Achievement!\n\nProfessional Dog Annoyer Unlocked 🐶❤️"
-
-);
-
-}
-
-});
-
-});
-
-/* ---------- DOUBLE TAP SECRET ---------- */
-
-document.body.addEventListener("dblclick",()=>{
-
-celebration();
-
-});
-
-/* ---------- RANDOM LOVE MESSAGES ---------- */
-
-const loveMessages=[
-
-"❤️ I still get butterflies.",
-
-"🥹 You're my safest place.",
-
-"🌍 I'd choose you every time.",
-
-"😂 Happy Birthday, Old Man.",
-
-"🏎️ Pole Position in my heart.",
-
-"⚽ You'll always be my favourite player.",
-
-"🎱 You're stuck with me forever."
-
-];
-
-function randomMessage(){
-
-const note=document.createElement("div");
-
-note.style.position="fixed";
-
-note.style.bottom="20px";
-
-note.style.right="20px";
-
-note.style.background="white";
-
-note.style.color="#ff4f9a";
-
-note.style.padding="15px 20px";
-
-note.style.borderRadius="20px";
-
-note.style.boxShadow="0 15px 35px rgba(0,0,0,.15)";
-
-note.style.fontWeight="bold";
-
-note.style.zIndex="999";
-
-note.innerHTML=
-
-loveMessages[Math.floor(Math.random()*loveMessages.length)];
-
-document.body.appendChild(note);
-
-setTimeout(()=>{
-
-note.remove();
-
-},4500);
-
-}
-
-setInterval(randomMessage,18000);
-
-/* ---------- HEART BURST ---------- */
-
-function burstHearts(){
-
-for(let i=0;i<40;i++){
-
-const heart=document.createElement("div");
-
-heart.className="heart";
-
-heart.innerHTML="❤️";
-
-heart.style.left=Math.random()*100+"vw";
-
-heart.style.fontSize=(20+Math.random()*25)+"px";
-
-heart.style.animationDuration=(3+Math.random()*2)+"s";
+(Math.random()*18+18)+"px";
 
 document.body.appendChild(heart);
 
@@ -1027,18 +150,720 @@ setTimeout(()=>{
 
 heart.remove();
 
+},7000);
+
+}
+
+setInterval(createHeart,1200);
+
+/* ===========================
+FIRELIES
+=========================== */
+
+function createFirefly(){
+
+const fly=document.createElement("div");
+
+fly.className="firefly";
+
+fly.style.left=Math.random()*100+"vw";
+
+fly.style.animationDuration=
+
+(Math.random()*5+6)+"s";
+
+document.body.appendChild(fly);
+
+setTimeout(()=>{
+
+fly.remove();
+
+},12000);
+
+}
+
+setInterval(createFirefly,900);
+
+/* ===========================
+SHOOTING STARS
+=========================== */
+
+function shootingStar(){
+
+const star=document.createElement("div");
+
+star.className="shooting-star";
+
+star.style.left=Math.random()*30+"vw";
+
+document.body.appendChild(star);
+
+setTimeout(()=>{
+
+star.remove();
+
+},4500);
+
+}
+
+setInterval(shootingStar,10000);
+
+/* ===========================
+PROGRESS BAR
+=========================== */
+
+const progress=document.createElement("div");
+
+progress.id="progress";
+
+document.body.appendChild(progress);
+
+window.addEventListener("scroll",()=>{
+
+const scroll=
+
+document.documentElement.scrollTop;
+
+const height=
+
+document.documentElement.scrollHeight-
+
+document.documentElement.clientHeight;
+
+progress.style.width=
+
+(scroll/height)*100+"%";
+
+});
+
+/* ===========================
+TYPEWRITER LETTER
+=========================== */
+
+const originalLetter = `My love,
+
+Happy Birthday. ❤️
+
+Thank you for making me feel safe,
+seen,
+and loved.
+
+Thank you for choosing me every single day.
+
+You've become my favourite place,
+my biggest comfort,
+and the person I thank God for the most.
+
+If I had to choose again...
+
+I'd still choose you.
+
+Every.
+Single.
+Time.
+
+Happy Birthday, Shemane.
+
+I love you.
+
+Love,
+Kefilwe ❤️`;
+
+const letterParagraph = document.querySelector("#letterText p");
+
+letterParagraph.innerHTML = "";
+
+let index = 0;
+let typingStarted = false;
+
+function typeLetter(){
+
+if(index < originalLetter.length){
+
+letterParagraph.innerHTML += originalLetter.charAt(index);
+
+index++;
+
+setTimeout(typeLetter,45);
+
+}
+
+}
+
+envelope.addEventListener("click",()=>{
+
+if(!typingStarted){
+
+typingStarted=true;
+
+typeLetter();
+
+}
+
+});
+
+/* ===========================
+SPOTIFY CARDS ANIMATION
+=========================== */
+
+const cards=document.querySelectorAll(".card");
+
+const observer=new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.style.opacity="1";
+
+entry.target.style.transform="translateY(0)";
+
+}
+
+});
+
+});
+
+cards.forEach(card=>{
+
+card.style.opacity="0";
+
+card.style.transform="translateY(80px)";
+
+card.style.transition="1s";
+
+observer.observe(card);
+
+});
+
+/* ===========================
+TIMELINE ANIMATION
+=========================== */
+
+const memories=document.querySelectorAll(".memory");
+
+memories.forEach(memory=>{
+
+memory.style.opacity="0";
+
+memory.style.transform="translateX(-60px)";
+
+memory.style.transition="1s";
+
+observer.observe(memory);
+
+});
+
+const timelineObserver=new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.style.opacity="1";
+
+entry.target.style.transform="translateX(0)";
+
+}
+
+});
+
+});
+
+memories.forEach(memory=>{
+
+timelineObserver.observe(memory);
+
+});
+
+/* ===========================
+PHOTO FADE IN
+=========================== */
+
+photos.forEach(photo=>{
+
+photo.style.opacity="0";
+
+photo.style.transform="translateY(60px) rotate(-5deg)";
+
+photo.style.transition="1s";
+
+});
+
+const photoObserver=new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.style.opacity="1";
+
+entry.target.style.transform="translateY(0) rotate(0deg)";
+
+}
+
+});
+
+});
+
+photos.forEach(photo=>{
+
+photoObserver.observe(photo);
+
+});
+
+/* ===========================
+CONFETTI
+=========================== */
+
+function launchConfetti(){
+
+for(let i=0;i<180;i++){
+
+const piece=document.createElement("div");
+
+piece.className="confetti";
+
+piece.style.left=Math.random()*100+"vw";
+
+piece.style.background=
+
+["#1DB954","#ffffff","#ff4d88","#ffd700"][Math.floor(Math.random()*4)];
+
+piece.style.animationDuration=
+
+(Math.random()*3+3)+"s";
+
+document.body.appendChild(piece);
+
+setTimeout(()=>{
+
+piece.remove();
+
+},6000);
+
+}
+
+}
+
+/* ===========================
+ENDING CONFETTI
+=========================== */
+
+const ending=document.querySelector(".ending");
+
+const endingObserver=new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+launchConfetti();
+
+}
+
+});
+
+});
+
+endingObserver.observe(ending);
+
+/* ===========================
+SECRET HEART
+=========================== */
+
+const secretHeart=document.createElement("div");
+
+secretHeart.className="secretHeart";
+
+secretHeart.innerHTML="❤️";
+
+document.body.appendChild(secretHeart);
+
+secretHeart.addEventListener("click",()=>{
+
+alert("I'd still choose you. Every single time. ❤️");
+
+});
+
+/* ===========================
+OLD MAN EASTER EGG
+=========================== */
+
+const wrapped=document.querySelector(".spotify h2");
+
+let clicked=false;
+
+wrapped.addEventListener("click",()=>{
+
+if(clicked) return;
+
+clicked=true;
+
+alert("Fun Fact 🤭\n\nYou're only six months older than me... but somehow you already need me to step on your back.\n\nOld man. ❤️😂");
+
+});
+
+/* ===========================
+MUSIC ENDED
+=========================== */
+
+music.addEventListener("ended",()=>{
+
+setTimeout(()=>{
+
+window.scrollTo({
+
+top:document.body.scrollHeight,
+
+behavior:"smooth"
+
+});
+
+},1500);
+
+});
+
+/* ===========================
+SCRIPT.JS
+PART 3 (FINAL)
+=========================== */
+
+/* ===========================
+WELCOME FADE
+=========================== */
+
+window.addEventListener("load",()=>{
+
+document.body.style.opacity="0";
+
+setTimeout(()=>{
+
+document.body.style.transition="opacity 1.5s";
+
+document.body.style.opacity="1";
+
+},200);
+
+});
+
+/* ===========================
+SPOTIFY EQUALIZER
+=========================== */
+
+const equalizer=document.createElement("div");
+
+equalizer.className="equalizer";
+
+for(let i=0;i<5;i++){
+
+const bar=document.createElement("span");
+
+equalizer.appendChild(bar);
+
+}
+
+const spotifySection=document.querySelector(".spotify");
+
+spotifySection.insertBefore(equalizer,spotifySection.children[1]);
+
+/* ===========================
+FLOATING SPARKLES
+=========================== */
+
+function sparkle(){
+
+const s=document.createElement("div");
+
+s.innerHTML="✨";
+
+s.style.position="fixed";
+
+s.style.left=Math.random()*100+"vw";
+
+s.style.top="110vh";
+
+s.style.fontSize=(Math.random()*10+14)+"px";
+
+s.style.opacity=".8";
+
+s.style.pointerEvents="none";
+
+s.style.transition="transform 8s linear, opacity 8s linear";
+
+document.body.appendChild(s);
+
+setTimeout(()=>{
+
+s.style.transform="translateY(-120vh)";
+
+s.style.opacity="0";
+
+},50);
+
+setTimeout(()=>{
+
+s.remove();
+
+},8500);
+
+}
+
+setInterval(sparkle,1800);
+
+/* ===========================
+SECTION FADE-IN
+=========================== */
+
+const sections=document.querySelectorAll("section");
+
+const sectionObserver=new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.animate([
+
+{
+
+opacity:0,
+
+transform:"translateY(60px)"
+
+},
+
+{
+
+opacity:1,
+
+transform:"translateY(0)"
+
+}
+
+],{
+
+duration:900,
+
+fill:"forwards"
+
+});
+
+}
+
+});
+
+});
+
+sections.forEach(section=>{
+
+sectionObserver.observe(section);
+
+});
+
+/* ===========================
+SECRET MESSAGE
+=========================== */
+
+let clicks=0;
+
+document.body.addEventListener("click",()=>{
+
+clicks++;
+
+if(clicks===25){
+
+const popup=document.createElement("div");
+
+popup.innerHTML="❤️ Achievement Unlocked<br><br>You found a secret message.<br><br>'I hope every birthday from now on has me beside you.'";
+
+popup.style.position="fixed";
+
+popup.style.top="50%";
+popup.style.left="50%";
+
+popup.style.transform="translate(-50%,-50%)";
+
+popup.style.background="#181818";
+
+popup.style.padding="30px";
+
+popup.style.borderRadius="20px";
+
+popup.style.border="2px solid #1DB954";
+
+popup.style.textAlign="center";
+
+popup.style.zIndex="999999";
+
+popup.style.boxShadow="0 0 35px rgba(29,185,84,.5)";
+
+document.body.appendChild(popup);
+
+setTimeout(()=>{
+
+popup.remove();
+
 },5000);
 
 }
 
-}
+});
 
-document.querySelectorAll("button").forEach(button=>{
+/* ===========================
+MOBILE PHOTO TAP
+=========================== */
 
-button.addEventListener("click",burstHearts);
+photos.forEach(photo=>{
+
+photo.addEventListener("touchstart",()=>{
+
+photo.style.transform="scale(1.05) rotate(0deg)";
 
 });
 
-/* ---------- END ---------- */
+photo.addEventListener("touchend",()=>{
 
-console.log("❤️ Happy Birthday Shemane ❤️");
+setTimeout(()=>{
+
+photo.style.transform="";
+
+},300);
+
+});
+
+});
+
+/* ===========================
+BUTTON RIPPLE
+=========================== */
+
+document.querySelectorAll("button").forEach(button=>{
+
+button.addEventListener("click",function(e){
+
+const ripple=document.createElement("span");
+
+const size=Math.max(
+
+this.offsetWidth,
+
+this.offsetHeight
+
+);
+
+ripple.style.width=size+"px";
+
+ripple.style.height=size+"px";
+
+ripple.style.position="absolute";
+
+ripple.style.borderRadius="50%";
+
+ripple.style.background="rgba(255,255,255,.4)";
+
+ripple.style.left=e.offsetX-size/2+"px";
+
+ripple.style.top=e.offsetY-size/2+"px";
+
+ripple.style.transform="scale(0)";
+
+ripple.style.animation="ripple .8s";
+
+this.appendChild(ripple);
+
+setTimeout(()=>{
+
+ripple.remove();
+
+},800);
+
+});
+
+});
+
+/* ===========================
+RIPPLE ANIMATION
+=========================== */
+
+const rippleStyle=document.createElement("style");
+
+rippleStyle.innerHTML=`
+
+@keyframes ripple{
+
+to{
+
+transform:scale(4);
+
+opacity:0;
+
+}
+
+}
+
+`;
+
+document.head.appendChild(rippleStyle);
+
+/* ===========================
+FINAL MESSAGE
+=========================== */
+
+const finalLines=document.querySelectorAll(".ending h1,.ending h2,.ending h3,.ending p");
+
+finalLines.forEach(line=>{
+
+line.style.opacity="0";
+
+});
+
+const finalObserver=new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+let delay=0;
+
+finalLines.forEach(line=>{
+
+setTimeout(()=>{
+
+line.style.transition="1.2s";
+
+line.style.opacity="1";
+
+},delay);
+
+delay+=1200;
+
+});
+
+}
+
+});
+
+});
+
+finalObserver.observe(document.querySelector(".ending"));
+
+/* ===========================
+LOVE COUNTER
+=========================== */
+
+let love=0;
+
+setInterval(()=>{
+
+love++;
+
+console.log("Loving Dihlabe... Day "+love);
+
+},86400000);
+
+/* ===========================
+THE END ❤️
+=========================== */
+
+console.log("Website created with love by Kefilwe ❤️");
